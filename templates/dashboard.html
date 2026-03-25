@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CI/CD Demo App{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">
+        <i class="fas fa-chart-line text-primary"></i> Application Dashboard
+    </h1>
+
+    <!-- System Status Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="dashboard-card status-healthy">
+                <div class="card-header">
+                    <i class="fas fa-heart"></i> Application Status
+                </div>
+                <div class="card-body">
+                    <div class="status-badge">
+                        <span class="badge bg-success fs-6">
+                            <i class="fas fa-check-circle"></i> Healthy
+                        </span>
+                    </div>
+                    <p class="text-muted mt-3">{{ uptime }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-cog"></i> Configuration
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <strong>Version:</strong>
+                            <span class="badge bg-info">{{ info.version }}</span>
+                        </li>
+                        <li class="mb-2">
+                            <strong>Environment:</strong>
+                            <span class="badge bg-primary">{{ info.environment }}</span>
+                        </li>
+                        <li>
+                            <strong>Framework:</strong>
+                            <span class="badge bg-warning">Flask</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deployment Info -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-clock"></i> Uptime
+                </div>
+                <div class="card-body">
+                    <div class="metric-value">{{ uptime }}</div>
+                    <p class="text-muted small mt-2">Application is stable</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-server"></i> Container
+                </div>
+                <div class="card-body">
+                    <div class="metric-value">Docker</div>
+                    <p class="text-muted small mt-2">Containerized deployment</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-cube"></i> Orchestration
+                </div>
+                <div class="card-body">
+                    <div class="metric-value">K8s</div>
+                    <p class="text-muted small mt-2">Kubernetes ready</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Endpoints -->
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <i class="fas fa-plug"></i> Available Endpoints
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30%">Endpoint</th>
+                                    <th style="width: 30%">Method</th>
+                                    <th style="width: 40%">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>/</code></td>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td>Home page - Main dashboard</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/dashboard</code></td>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td>Dashboard page with system info</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/health</code></td>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td>Health check for Kubernetes</td>
+                                </tr>
+                                <tr>
+                                    <td><code>/api/status</code></td>
+                                    <td><span class="badge bg-success">GET</span></td>
+                                    <td>API endpoint for status information</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
