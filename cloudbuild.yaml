@@ -1,0 +1,40 @@
+# THis file cloudbuild.yaml is a configuration file for Google Cloud Build, which defines the steps to build a Docker image for a Flask application and push it to Google Container Registry (GCR). The file specifies the use of the Docker builder, sets the image name and tag, and includes the necessary arguments for building and pushing the image. The configuration also includes a step to print the image name after it has been built and pushed.
+#This helps to deploy existing image to GKE cluster using Cloud Build.
+ 
+steps:
+
+# 🔹 Step 1: Build Docker image
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - build
+    - -t
+    - us-west1-docker.pkg.dev/citric-kit-489316-g6/charan-ar/gbuildapp:$SHORT_SHA
+    - .
+
+# 🔹 Step 2: Push image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - push
+    - us-west1-docker.pkg.dev/citric-kit-489316-g6/charan-ar/gbuildapp:$SHORT_SHA
+
+
+# Step 3: Apply deployment (only if first time or changes in YAML)  
+- name: 'gcr.io/cloud-builders/kubectl'  #
+  args: ['apply', '-f', 'k8s/deployment.yaml'] # Command to apply the Kubernetes deployment configuration from the specified YAML file
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=charan-gke-01'
+
+# Step 4: Deploy updated image to GKE cluster
+- name: 'gcr.io/cloud-builders/kubectl' #
+  args:
+    - set          # Command to set the image for the deployment
+    - image        # Specifies the deployment and container to update with the new image  
+    - deployment/charan-flask-deployment            # Name of the Kubernetes deployment to update  
+    - flask-container=us-west1-docker.pkg.dev/citric-kit-489316-g6/charan-ar/gbuildapp:$SHORT_SHA # New image to use for the container
+ 
+  env:                       # Environment variables to specify the GKE cluster and region
+    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1-b'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=charan-gke-01' # Name of the GKE cluster to deploy to
+
+logsBucket: gs://charan-cloudbuild-logs
